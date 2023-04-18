@@ -1,46 +1,12 @@
-import  { useState } from "react";
-
-interface ReviewProps {
-  imdbID: string;
-  userRating?: number;
-  totalRatings?: number;
-  rating: number | undefined;
-  onRatingChange: (value: number) => void;
-}
-
-
-
-const Review =({ imdbID, userRating, totalRatings }: ReviewProps) => {
-  const [rating, setRating] = useState<number | undefined>(userRating);
-  const [total, setTotal] = useState<number>(totalRatings || 0);
-
-  const handleRatingChange = (value: number) => {
-    setRating(value);
-    if (totalRatings) {
-      setTotal(totalRatings + 1);
-    } else {
-      setTotal(1);
-    }
-  };
-
-  return (
-    <div>
-      {rating && (
-        <p>
-          Your rating: {rating} / 5 ({total} ratings)
-        </p>
-      )}
-      <RatingSelector rating={rating} onRatingChange={handleRatingChange} />
-    </div>
-  );
-};
+import { useState } from "react";
 
 interface RatingSelectorProps {
   rating?: number;
   onRatingChange: (value: number) => void;
+  imdbID: string;
 }
 
-const RatingSelector = ({ rating, onRatingChange }: RatingSelectorProps) => {
+const RatingSelector = ({ rating, onRatingChange, imdbID }: RatingSelectorProps) => {
   const [hoveredRating, setHoveredRating] = useState<number | undefined>(
     undefined
   );
@@ -59,9 +25,9 @@ const RatingSelector = ({ rating, onRatingChange }: RatingSelectorProps) => {
 
   const getStarColor = (value: number) => {
     if (hoveredRating !== undefined) {
-      return value <= hoveredRating ? "yellow" : "gray";
+      return value <= hoveredRating ? '#FFD700' : '#d3d3d3';
     }
-    return value <= (rating ?? 0) ? "yellow" : "gray";
+    return value <= (rating ?? 0) ?'#FFD700' : '#d3d3d3';
   };
 
   return (
@@ -82,4 +48,4 @@ const RatingSelector = ({ rating, onRatingChange }: RatingSelectorProps) => {
   );
 };
 
-export default Review;
+export default RatingSelector;

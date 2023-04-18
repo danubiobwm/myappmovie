@@ -88,7 +88,7 @@ export const MovieContainer = styled.div`
   flex-wrap: wrap;
   align-items: center;
   margin: 10px 0;
-  padding: 0 6rem;
+  padding: 0 7rem;
 
 
   .movie-info {

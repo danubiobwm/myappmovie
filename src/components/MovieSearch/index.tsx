@@ -7,14 +7,15 @@ import {
   Button,
   Pagination,
   MovieContainer,
-  Page
+  Page,
 } from "./styles";
 import { searchMovies } from "../../services/api";
 import Header from "../Header";
 import Footer from "../Footer";
 import Review from "../Review";
+import FavoriteButton from "../FavoriteButton";
 
-interface Movie {
+export interface Movie {
   imdbID: string;
   Title: string;
   Poster: string;
@@ -31,12 +32,13 @@ const MovieSearch: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [favorites, setFavorites] = useState<Movie[]>([]);
 
   const handleSearch = async () => {
     const results = await searchMovies(query);
     console.log("RESULTS:", results);
     setMovies(results);
-    setTotalPages(Math.ceil(results.length / 1)); // alterado para 1 elemento por página
+    setTotalPages(Math.ceil(results.length / 1));
     setCurrentPage(1);
   };
 
@@ -55,14 +57,26 @@ const MovieSearch: React.FC = () => {
     setCurrentPage(1);
   }, [movies]);
 
-  const startIndex: number = (currentPage - 1) * 1; // alterado para 1 elemento por página
-  const endIndex: number = startIndex + 1; // alterado para 1 elemento por página
+  const startIndex: number = (currentPage - 1) * 1;
+  const endIndex: number = startIndex + 1;
   const currentMovies: Movie[] = movies.slice(startIndex, endIndex);
+
+  const handleFavoriteToggle = (movie: Movie) => {
+    if (favorites.some((fav) => fav.imdbID === movie.imdbID)) {
+      setFavorites(favorites.filter((fav) => fav.imdbID !== movie.imdbID));
+    } else {
+      setFavorites([...favorites, movie]);
+    }
+  };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [movies]);
+
 
   return (
     <div>
       <Header />
-
       <Container>
         <Label htmlFor="searchInput">Search for a movie...</Label>
         <ContainerForm>
@@ -96,26 +110,30 @@ const MovieSearch: React.FC = () => {
             <p>
               Ratings: <span>{movie.Ratings}</span>
             </p>
-            <Review imdbID={movie.imdbID} rating={movie.userRating} totalRatings={movie.totalRatings} />
-
+            <Review
+              imdbID={movie.imdbID}
+              userRating={movie.userRating}
+              totalRatings={movie.totalRatings}
+            />
+            <FavoriteButton movie={movie} favorites={favorites} onFavoriteToggle={handleFavoriteToggle} />
           </div>
           <img src={movie.Poster} alt={movie.Title} />
         </MovieContainer>
       ))}
       <Page>
-      {totalPages > 1 && (
-        <div>
-          {Array.from(Array(totalPages).keys()).map((page: number) => (
-            <Pagination
-              key={page}
-              onClick={() => handlePageChange(page + 1)}
-              active={currentPage === page + 1}
-            >
-              {page + 1}
-            </Pagination>
-          ))}
-        </div>
-      )}
+        {totalPages > 1 && (
+          <div>
+            {Array.from(Array(totalPages).keys()).map((page: number) => (
+              <Pagination
+                key={page}
+                onClick={() => handlePageChange(page + 1)}
+                active={currentPage === page + 1}
+              >
+                {page + 1}
+              </Pagination>
+            ))}
+          </div>
+        )}
       </Page>
       {movies.length > 0 && <Footer />}
     </div>
