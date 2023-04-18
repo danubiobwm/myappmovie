@@ -1,10 +1,5 @@
 import styled from 'styled-components';
 
-
-export const Container = styled.div`
-  display: flex;
-
-`;
 export const HeaderContainer = styled.header`
   background: #202024;
   display: flex;

@@ -1,0 +1,19 @@
+/* Estilos padrão para telas grandes */
+.MovieContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.MovieContainer img {
+  max-width: 100%;
+}
+
+.MovieContainer h1 {
+  font-size: 2rem;
+}
+
+

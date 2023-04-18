@@ -1,4 +1,5 @@
 import MovieSearch from './components/MovieSearch';
+import  "./app.css";
 import "./global.css";
 
 function App() {
